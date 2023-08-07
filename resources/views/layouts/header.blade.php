@@ -151,7 +151,7 @@
           <img src="{{url('public/dist/img/user2-160x160.jpg')}}" class="img-circle elevation-2" alt="User Image">
         </div>
         <div class="info">
-          <a href="#" class="d-block">Alexander Pierce</a>
+          <a href="#" class="d-block">{{Auth::user()->name}}</a>
         </div>
       </div>
 
@@ -161,6 +161,8 @@
           <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
           <li class="nav-header">EXAMPLES</li>
+
+          @if (Auth::user()->user_type==1)
           <li class="nav-item">
             <a href="{{url('admin/dashboard')}}" class="nav-link">
               <i class="nav-icon fas fa-tachometer-alt"></i>
@@ -174,6 +176,45 @@
               <i class="nav-icon far fa-user"></i>
               <p>
                 Admin
+              </p>
+            </a>
+          </li>
+
+          @elseif(Auth::user()->user_type==2)
+          <li class="nav-item">
+            <a href="{{url('teacher/dashboard')}}" class="nav-link">
+              <i class="nav-icon fas fa-tachometer-alt"></i>
+              <p>
+                Dashboard
+              </p>
+            </a>
+          </li>
+
+          @elseif(Auth::user()->user_type==3)
+          <li class="nav-item">
+            <a href="{{url('student/dashboard')}}" class="nav-link">
+              <i class="nav-icon fas fa-tachometer-alt"></i>
+              <p>
+                Dashboard
+              </p>
+            </a>
+          </li>
+
+          @elseif(Auth::user()->user_type==4)
+          <li class="nav-item">
+            <a href="{{url('parent/dashboard')}}" class="nav-link">
+              <i class="nav-icon fas fa-tachometer-alt"></i>
+              <p>
+                Dashboard
+              </p>
+            </a>
+          </li>
+          @endif
+          <li class="nav-item">
+            <a href="{{url('logout')}}" class="nav-link">
+              <i class="nav-icon far fa-user"></i>
+              <p>
+                Logout
               </p>
             </a>
           </li>
