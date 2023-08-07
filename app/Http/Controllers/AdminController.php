@@ -28,4 +28,26 @@ class AdminController extends Controller
 
         return redirect('admin/admin/list')->with('success',"Admin successfully created");
     }
+
+    public function edit($id){
+        $data['getRecord'] = User::getSingle($id);
+        if(!empty($data['getRecord'])){
+            $data ['header_title'] = 'Edit Admin';
+            return view('admin.admin.edit',$data);
+        } else{
+            abort(404);
+        }
+    }
+
+    public function update($id,Request $request){
+        $user = User::getSingle($id);
+        $user->name = trim($request->name);
+        $user->email = trim($request->email);
+        if(!empty($request->password)){
+            $user->password = Hash::make($request->password);
+        }
+        $user->save();
+
+        return redirect('admin/admin/list')->with('success',"Admin successfully updated");
+    }
 }

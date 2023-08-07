@@ -50,6 +50,10 @@ class User extends Authenticatable
                             ->get();
     }
 
+    static public function getSingle($id){
+        return self::find($id);
+    }
+
     static public function getEmailSingle($email){
         return User::where('email','=',$email)->first();
     }
