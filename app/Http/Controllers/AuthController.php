@@ -3,8 +3,12 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Hash;
 use Auth;
+use App\Models\User;
+use App\Mail\ForgotPasswordMail;
+use Mail;
 class AuthController extends Controller
 {
     public function login(){
@@ -50,8 +54,50 @@ class AuthController extends Controller
     }
     }
 
+    public function forgotpassword(){
+        return view('auth.forgot-password');
+    }
+
+    public function PostForgotPassword(Request $request){
+        $user = User::getEmailSingle($request->email);
+        if(!empty($user))
+        {
+            $user->remember_token = Str::random(30);
+            $user->save();
+
+            Mail::to($user->email)->send(new ForgotPasswordMail($user));
+            return redirect()->back()->with('success',"Please check email and reset your password");
+        } else{
+            return redirect()->back()->with('error',"email not found in the system");
+        }
+    }
+
+    public function resetPassword($remember_token){
+        $user = User::getTokenSingle($remember_token);
+        if(!empty($user)){
+            $data['user'] = $user;
+            return view('auth.reset-password',$data);
+        } else{
+            abort(404);
+        }
+    }
+
+    public function PostResetPassword($token,Request $request){
+        if($request->password == $request->cpassword){
+            $user = User::getTokenSingle($token);
+            $user ->password = Hash::make($request->password);
+            $user->remember_token = Str::random(30);
+            $user->save();
+
+            return redirect(url(''))->with('success',"Password successfully reset");
+        } else{
+            return redirect()->back()->with('error',"Password and confirm password does not match");
+        }
+    }
+
     public function logout(){
         Auth::logout();
         return redirect(url(''));
     }
+
 }
