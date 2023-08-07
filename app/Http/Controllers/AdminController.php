@@ -50,4 +50,28 @@ class AdminController extends Controller
 
         return redirect('admin/admin/list')->with('success',"Admin successfully updated");
     }
+
+    public function delete($id){
+
+        //it will delete in action but still have in database
+        $user = User::getSingle($id);
+        $user->is_delete == 1;
+        $user->save();
+
+        return redirect('admin/admin/list')->with('success',"Admin successfully deleted");
+    }
+
+        // $user = User::getSingle($id);
+        // // Check if the user exists
+        // if ($user) {
+        //     // Delete the user
+        //     $user->delete();
+
+        //     // Optionally, you can redirect or return a response
+        //     return redirect('admin/admin/list')->with('success', 'User deleted successfully.');
+        // }
+
+        // // User not found, handle the error
+        // return redirect('admin/admin/list')->with('error', 'User not found.');
+    //}
 }
